@@ -61,6 +61,10 @@ def send_toCNN():
         newCl = tk.Entry(newWindow)
         newCl.pack()
         tk.Button(newWindow, text="Submit", command=output_res).pack(fill=tk.X)
+
+def retrain():
+    pass
+
 root = tk.Tk()
 root.resizable(width=False, height=False)
 root.title("Painting Input")
@@ -71,7 +75,6 @@ submit=tk.Button(root,text="Submit",command=send_toCNN)
 submit.pack(side=tk.LEFT)
 reset=tk.Button(root,text="Reset",command=reset_bt)
 reset.pack(side=tk.RIGHT)
-msg = tk.Label(root,text="Press & Drug to draw.")
-msg.pack(side=tk.BOTTOM)
-
+cnnTrigger = tk.Button(root,text="Retrain",command=retrain)
+cnnTrigger.pack(side=tk.BOTTOM)
 tk.mainloop()
