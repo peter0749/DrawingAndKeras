@@ -1,8 +1,20 @@
+from __future__ import print_function   
+from PIL import Image
+import numpy as np
+import os
+from os import listdir
+from os.path import isfile, join
 import tkinter as tk
 from tkinter.messagebox import showinfo, askyesno
-import numpy as np
 import time
-from PIL import Image
+os.environ['KERAS_BACKEND']='theano'
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.layers import Convolution2D, MaxPooling2D
+from keras.utils import np_utils
+
+import CNN_ReadImg
 padxlim = 320
 padylim = 240
 image_count=0
@@ -11,14 +23,14 @@ pattern_in = np.ones((padylim,padxlim))
 newCl=""
 Cl="dog"
 
-def testprint():
+def output_res():
     global Cl,newCl,pattern_in,image_count
     Cl = newCl.get()
     print("New Type: %s\n" % (newCl.get()))
     img = Image.fromarray(pattern_in*255)
     if(img.mode!='RGB'):
         img = img.convert('RGB')
-    img.save('data/test-'+str(image_count)+'-'+str(newCl.get())+'-.bmp')
+    img.save('data/test-'+str(image_count)+'-'+str(newCl.get())+'.bmp')
     image_count+=1
 
 def drawdot(event):
@@ -48,9 +60,7 @@ def send_toCNN():
         tk.Label(newWindow,text="Correct catagory").pack()
         newCl = tk.Entry(newWindow)
         newCl.pack()
-        tk.Button(newWindow, text="Submit", command=testprint).pack(fill=tk.X)
-    reset_bt()
-
+        tk.Button(newWindow, text="Submit", command=output_res).pack(fill=tk.X)
 root = tk.Tk()
 root.resizable(width=False, height=False)
 root.title("Painting Input")
