@@ -14,7 +14,7 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 
-import CNN_ReadImg
+dirPos='data'
 padxlim = 320
 padylim = 240
 image_count=0
@@ -22,6 +22,24 @@ w=[]
 pattern_in = np.ones((padylim,padxlim))
 newCl=""
 Cl="dog"
+trainedModel=[]
+
+def Read_IMGS(width=320, height=240, dirPos='data'):
+    imgList = [f for f in listdir(dirPos) if isfile(join(dirPos,f))]
+    imgnum = len(imgList)
+    labels = []
+    imgs = np.empty((imgnum, 3, height, width), dtype="float32")
+    i=0
+    for path in imgList:
+        lab = path.split("-")[2].split(".")[0]
+        labels.append(lab)
+        img = Image.open(dirPos+'/'+path)
+        img = img.resize((height,width), Image.BILINEAR)
+        img = np.asarray(img, dtype='float32')
+        imgs[i,:,:,:] = img
+        i+=1
+    #img.show()
+    return imgs, labels
 
 def output_res():
     global Cl,newCl,pattern_in,image_count
@@ -30,7 +48,7 @@ def output_res():
     img = Image.fromarray(pattern_in*255)
     if(img.mode!='RGB'):
         img = img.convert('RGB')
-    img.save('data/test-'+str(image_count)+'-'+str(newCl.get())+'.bmp')
+    img.save(dirPos+'/test-'+str(image_count)+'-'+str(newCl.get())+'.bmp')
     image_count+=1
 
 def drawdot(event):
@@ -63,6 +81,8 @@ def send_toCNN():
         tk.Button(newWindow, text="Submit", command=output_res).pack(fill=tk.X)
 
 def retrain():
+    imgs, labels = Read_IMGS(width=padxlim,height=padylim,dirPos=dirPos)
+    
     pass
 
 root = tk.Tk()
