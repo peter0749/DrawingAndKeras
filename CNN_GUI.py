@@ -20,8 +20,8 @@ import matplotlib.image as mpimg
 
 
 dirPos='data'
-padxlim = 320
-padylim = 240
+padxlim = 220
+padylim = 220
 image_count=0
 w=[]
 pattern_in = np.ones((padylim,padxlim))
@@ -45,10 +45,10 @@ def Read_IMGS(width=320, height=240, dirPos='data'):
         img = Image.open(dirPos+'/'+path)
         img = img.resize((width,height), Image.BILINEAR)
         img = img.convert('L')
-        #img = img.point(lambda x: 0 if x<25 else 1, '1')
+        img = img.point(lambda x: 0 if x<25 else 1, '1')
         print(img.size)
         img = np.asarray(img, dtype='float32')
-        img/=255
+        #img/=255
         print(img.shape)
         img = img[:,:,newaxis]
         imgs[i,:,:,:] = img
@@ -116,10 +116,10 @@ def retrain():
             i+=1
 
     nb_classes = len(label_cat)
-    nb_epoch = 12
-    nb_filters = 32
+    nb_epoch = 50
+    nb_filters = 31
     pool_size = (3,3)
-    kernel_size = (5,5)
+    kernel_size = (6,6)
     input_shape = (padylim,padxlim,1)
     imgs = imgs.astype('float32')
     #imgs/=255.0
