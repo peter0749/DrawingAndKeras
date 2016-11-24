@@ -132,8 +132,8 @@ def retrain():
 
     nb_classes = len(label_cat)
 #For Powerful computers
-    nb_epoch = 60
-    nb_filters = 34
+    nb_epoch = 85
+    nb_filters = 50
     pool_size = (3,3)
     kernel_size = (6,6)
 #end of comment
