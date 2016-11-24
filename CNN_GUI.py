@@ -83,7 +83,7 @@ def reset_bt():
 
 def send_toCNN():
     global newCl, Cl, trainedModel
-    trainedModel = load_model('new_model.h5')
+    #trainedModel = load_model('new_model.h5')
     mydraw = np.asarray(pattern_in, dtype='float32')
     mydraw = mydraw[newaxis,:,:,newaxis]
     print(mydraw.shape)
@@ -152,7 +152,8 @@ def retrain():
                   optimizer='adadelta',
                   metrics=['accuracy'])
     model.fit(imgs, labnum, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1)
-    model.save('new_model.h5')
+    #model.save('new_model.h5')
+    trainedModel = model
     del model
 
 root = tk.Tk()
