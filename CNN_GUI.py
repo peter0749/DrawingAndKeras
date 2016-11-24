@@ -20,8 +20,8 @@ import matplotlib.image as mpimg
 
 
 dirPos='data'
-padxlim = 220
-padylim = 220
+padxlim = 240
+padylim = 240
 image_count=0
 w=[]
 pattern_in = np.ones((padylim,padxlim))
@@ -32,6 +32,8 @@ label_cat=dict()
 label_tac=dict()
 labnum=[]
 batch_size=128
+traindimX = 48
+traindimY = 48
 
 def Read_IMGS(width=320, height=240, dirPos='data'):
     imgList = [f for f in listdir(dirPos) if isfile(join(dirPos,f))]
@@ -45,10 +47,9 @@ def Read_IMGS(width=320, height=240, dirPos='data'):
         img = Image.open(dirPos+'/'+path)
         img = img.resize((width,height), Image.BILINEAR)
         img = img.convert('L')
-        img = img.point(lambda x: 0 if x<25 else 1, '1')
         print(img.size)
         img = np.asarray(img, dtype='float32')
-        #img/=255
+        img/=255
         print(img.shape)
         img = img[:,:,newaxis]
         imgs[i,:,:,:] = img
@@ -68,10 +69,12 @@ def output_res():
 
 def drawdot(event):
     global w, pattern_in
-    if(event.y >= padylim or event.x >= padxlim):
+    if(event.y+3 >= padylim or event.x+3 >= padxlim or event.y-3<0 or event.x-3<0):
         return
+    for i in range(-2,2):
+        for j in range(-2,2):
+            pattern_in[event.y+i][event.x+j]=0
     print("%d %d\n" % (event.y, event.x))
-    pattern_in[event.y][event.x]=0
     x1, y1 = (event.x-1, event.y-1)
     x2, y2 = (event.x+1, event.y+1)
     w.create_oval(x1,y1,x2,y2)
@@ -84,7 +87,15 @@ def reset_bt():
 def send_toCNN():
     global newCl, Cl, trainedModel
     #trainedModel = load_model('new_model.h5')
-    mydraw = np.asarray(pattern_in, dtype='float32')
+    mydraw = np.asarray(pattern_in, dtype='uint8')
+    mydraw = Image.fromarray(mydraw*255)
+    mydraw = mydraw.resize( (traindimX, traindimY), Image.BILINEAR )
+    mydraw = mydraw.convert('L')
+    mydraw.show()#Comment this to prevent showing image
+    mydraw = np.asarray(mydraw, dtype='float32')
+    mydraw/=255
+    print(mydraw)
+    print(mydraw.shape)
     mydraw = mydraw[newaxis,:,:,newaxis]
     print(mydraw.shape)
     lab = trainedModel.predict_classes(x=mydraw,batch_size=batch_size)
@@ -103,32 +114,36 @@ def send_toCNN():
         tk.Button(newWindow, text="Submit", command=output_res).pack(fill=tk.X)
 
 def retrain():
-    global label_cat, label_tac, labnum, batch_size, trainedModel
-    imgs, labels = Read_IMGS(width=padxlim,height=padylim,dirPos=dirPos)
+    global label_cat, label_tac, labnum, batch_size, trainedModel, image_count
+    imgs, labels = Read_IMGS(width=traindimX, height=traindimY, dirPos=dirPos)
+    image_count = len(labels)
+#Reset the counter to the very end of the index of image files. And 'image_count' points to the position where the next image appends.
     print(labels)
+#Lazy mapping
     label_cat.clear()
     label_tac.clear()
+#gotta fix it
     i=0
     for x in labels:
         if(x not in label_cat):
             label_cat[x]=i
-            label_tac[i]=x
+            label_tac[i]=x#存反查
             i+=1
 
     nb_classes = len(label_cat)
-    nb_epoch = 50
-    nb_filters = 31
+#For Powerful computers
+    nb_epoch = 60
+    nb_filters = 34
     pool_size = (3,3)
     kernel_size = (6,6)
-    input_shape = (padylim,padxlim,1)
+#end of comment
+    input_shape = (traindimY,traindimX,1)
     imgs = imgs.astype('float32')
-    #imgs/=255.0
     labnum = []
     for x in labels:
         if(x in label_cat):
-            labnum.append(label_cat[x])
+            labnum.append(label_cat[x])#字串換成mapping 到的labels
 
-    #labnum = np_utils.to_categorical(labnum,nb_classes)
     print(labnum)
     print('Shape: ', imgs.shape)
     print('Samples: ', imgs.shape[0])
@@ -152,9 +167,9 @@ def retrain():
                   optimizer='adadelta',
                   metrics=['accuracy'])
     model.fit(imgs, labnum, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1)
-    #model.save('new_model.h5')
     trainedModel = model
     del model
+#Destroy the model generated in function.
 
 root = tk.Tk()
 root.resizable(width=False, height=False)
