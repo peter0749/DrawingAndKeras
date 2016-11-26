@@ -132,10 +132,10 @@ def retrain():
 
     nb_classes = len(label_cat)
 #For Powerful computers
-    nb_epoch = 85
-    nb_filters = 50
-    pool_size = (3,3)
-    kernel_size = (6,6)
+    nb_epoch = 90
+    nb_filters = 16
+    pool_size = (2,2)
+    kernel_size = (3,3)
 #end of comment
     input_shape = (traindimY,traindimX,1)
     imgs = imgs.astype('float32')
