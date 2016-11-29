@@ -11,8 +11,8 @@ And what's more, Theano can take advantage of NVIDIA's CUDA APIs and NVIDIA's cu
 ###How to run?
 `python CNN_GUI.py`
 ###How to use?
-#####First. Press the `Retrain` button.
-The program will begin to learn how to recognize and classify drawings by using the drawings it recognized before.
+#####First. Train it!
+Press the `Retrain` button. The program will begin to learn how to recognize and classify drawings by using the drawings it recognized before.
 #####Secend. Time to Graffiti!
 Draw something on the board.
 #####Third. If it makes mistakes
