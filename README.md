@@ -16,7 +16,7 @@ Press the `Retrain` button. The program will begin to learn how to recognize and
 
 ![Retraining](./imgs/train.gif)
 #####Secend. Time to Graffiti!
-Draw something on the board. Once you done, press `Submit` button. The program will try to find the answer.
+Draw something on the board. Once you have done, press `Submit` button. The program will try to find the answer.
 
 ![smile](./imgs/smile.gif)
 #####Third. If it makes mistakes
