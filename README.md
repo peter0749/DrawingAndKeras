@@ -6,6 +6,6 @@ It needs Python3 and following packages to run properly:
 `Theano, Keras, pillow, numpy, spicy, tkinter, time, h5py and matplotlib.`
 
 Try `pip` to install them:
-####How to run?
+###How to run?
 `python CNN_GUI.py`
-####How to use?
+###How to use?
