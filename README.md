@@ -15,7 +15,7 @@ And what's more, Theano can take advantage of NVIDIA's CUDA APIs and NVIDIA's cu
 Press the `Retrain` button. The program will begin to learn how to recognize and classify drawings by using the drawings it recognized before.
 
 ![Retraining](./imgs/train.gif)
-#####Secend. Time to Graffiti!
+#####Second. Time to Graffiti!
 Draw something on the board. Once you have done, press `Submit` button. The program will try to find the answer.
 
 ![smile](./imgs/smile.gif)
