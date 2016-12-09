@@ -73,7 +73,7 @@ def drawdot(event):
         return
     for i in range(-2,2):
         for j in range(-2,2):
-            pattern_in[event.y+i][event.x+j]=0
+            pattern_in[event.y+i][event.x+j]=1.0
     print("%d %d\n" % (event.y, event.x))
     x1, y1 = (event.x-1, event.y-1)
     x2, y2 = (event.x+1, event.y+1)
@@ -127,13 +127,13 @@ def retrain():
     for x in labels:
         if(x not in label_cat):
             label_cat[x]=i
-            label_tac[i]=x#存反查
+            label_tac[i]=x
             i+=1
 
     nb_classes = len(label_cat)
 #For Powerful computers
-    nb_epoch = 84
-    nb_filters = 72
+    nb_epoch = 12
+    nb_filters = 36
     pool_size = (2,2)
     kernel_size = (3,3)
 #end of comment
@@ -142,7 +142,7 @@ def retrain():
     labnum = []
     for x in labels:
         if(x in label_cat):
-            labnum.append(label_cat[x])#字串換成mapping 到的labels
+            labnum.append(label_cat[x])
 
     print(labnum)
     print('Shape: ', imgs.shape)
