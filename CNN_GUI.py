@@ -24,7 +24,7 @@ padxlim = 240
 padylim = 240
 image_count=0
 w=[]
-pattern_in = np.ones((padylim,padxlim))
+pattern_in = np.zeros((padylim,padxlim))
 newCl=""
 Cl="dog"
 trainedModel=[]
@@ -81,7 +81,7 @@ def drawdot(event):
 
 def reset_bt():
     global pattern_in, w
-    pattern_in = np.ones((padylim,padxlim))
+    pattern_in = np.zeros((padylim,padxlim))
     w.delete(tk.ALL)
 
 def send_toCNN():
@@ -132,8 +132,8 @@ def retrain():
 
     nb_classes = len(label_cat)
 #For Powerful computers
-    nb_epoch = 12
-    nb_filters = 36
+    nb_epoch = 30
+    nb_filters = 42
     pool_size = (2,2)
     kernel_size = (3,3)
 #end of comment
