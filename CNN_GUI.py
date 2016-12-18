@@ -14,14 +14,16 @@ from keras.datasets import mnist
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D
+from keras.optimizers import SGD, Adam, RMSprop, Adagrad
+from keras.callbacks import EarlyStopping
 from keras.utils import np_utils
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
 dirPos='data'
-padxlim = 240
-padylim = 240
+padxlim = 256
+padylim = 256
 image_count=0
 w=[]
 pattern_in = np.zeros((padylim,padxlim))
@@ -32,8 +34,8 @@ label_cat=dict()
 label_tac=dict()
 labnum=[]
 batch_size=128
-traindimX = 48
-traindimY = 48
+traindimX = 32
+traindimY = 32
 
 def Read_IMGS(width=320, height=240, dirPos='data'):
     imgList = [f for f in listdir(dirPos) if isfile(join(dirPos,f))]
@@ -132,8 +134,8 @@ def retrain():
 
     nb_classes = len(label_cat)
 #For Powerful computers
-    nb_epoch = 30
-    nb_filters = 42
+    nb_epoch = 24
+    nb_filters = 40
     pool_size = (2,2)
     kernel_size = (3,3)
 #end of comment
@@ -147,10 +149,10 @@ def retrain():
     print(labnum)
     print('Shape: ', imgs.shape)
     print('Samples: ', imgs.shape[0])
-
     model = Sequential()
+    earlyStop = EarlyStopping(monitor='loss',patience=1, verbose=1, mode='auto')
     model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
-                            border_mode='valid',
+                            border_mode='same',
                             input_shape=input_shape))
     model.add(Activation('relu'))
     model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1]))
@@ -160,13 +162,13 @@ def retrain():
     model.add(Flatten())
     model.add(Dense(128))
     model.add(Activation('relu'))
-    model.add(Dropout(0.5))
+    model.add(Dropout(0.25))
     model.add(Dense(nb_classes))
     model.add(Activation('softmax'))
     model.compile(loss='sparse_categorical_crossentropy',
-                  optimizer='adadelta',
+                  optimizer='Adagrad',
                   metrics=['accuracy'])
-    model.fit(imgs, labnum, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1)
+    model.fit(imgs, labnum, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1, callbacks=[earlyStop])
     trainedModel = model
     del model
 #Destroy the model generated in function.
